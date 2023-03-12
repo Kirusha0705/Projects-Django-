@@ -1,0 +1,87 @@
+from news.models import *
+
+user1 = User.objects.create_user('Кирилл')
+user2 = User.objects.create_user('Иван')
+auth1 = Author.objects.create(user=user1)
+auth2 = Author.objects.create(user=user2)
+
+Category.objects.create(name='Спорт')
+Category.objects.create(name = 'Музыка')
+Category.objects.create(name = 'Игры') 
+Category.objects.create(name = 'Погода')
+
+
+article1 = Post.objects.create(author=auth1, type='AR', article='Спартак приблизился к зениту', text='Спартак играет хорошо')
+article2 = Post.objects.create(author=auth2, type='AR', article='Аргентина выйграла чемпионат мира', text='Месси обыграл Мбапе')
+news1 = Post.objects.create(author=auth1, type='NS', article='Футболист спел свою любимую песню', text='Песня из кинофильма розовая пантера')
+news2 = Post.objects.create(author=auth2, type='NS', article='Тут заголовок статьи', text='Тут текст статьи')
+
+categ1 = Category.objects.get(pk=1) 
+categ2 = Category.objects.get(pk=2) 
+
+article1.category.add(categ1)
+article2.category.add(categ2)
+news1.category.add(categ1)
+news1.category.add(categ2)
+
+com1 = Comment.objects.create(post=news2, user=user1, comment_text='оригинально')
+com2 = Comment.objects.create(post=news1, user=user2, comment_text='ставь лайк если пропел')
+com3 = Comment.objects.create(post=article2, user=user1, comment_text='я болел за Францию')
+com4 = Comment.objects.create(post=article1, user=user2, comment_text='не смотрю РПЛ')
+
+---Блок like\dislike----
+com1.like()
+com2.like()
+com3.like()
+com4.like()
+article1.like()
+article2.like()
+news1.like()
+news2.like()
+---Блок like\dislike----
+
+
+auth1.update_rating()
+auth2.update_rating()
+
+name = Author.objects.order_by('user_rating').last().user.username
+rating = Author.objects.order_by('user_rating').last().user_rating
+print(name, rating)
+
+post_best=Post.objects.all().order_by('-rating_news').first()  #сортирую по рейтингу в обратном поряде (от большего к меньшему и выбираю 1 пост)
+post_best.time_in
+post_best.author.user.username
+post_best.rating_news
+post_best.article
+post_best.preview()
+
+bestpost_comment = Comment.objects.get(post=post_best)  #получаю комментарий к лучшему посту
+bestpost_comment.comment_create
+bestpost_comment.user.username 
+bestpost_comment.rating_news
+bestpost_comment.comment_text
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
